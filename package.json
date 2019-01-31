@@ -1,0 +1,28 @@
+{
+  "name": "annotations",
+  "version": "1.0.0",
+  "description": "A text annotation tool",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "sass-watch": "node-sass -w --source-map true assets/stylesheets/main.scss -o assets/stylesheets/compiled --importer=node_modules/node-sass-tilde-importer",
+    "sass": "node-sass --source-map true assets/stylesheets/main.scss -o assets/stylesheets/compiled --importer=node_modules/node-sass-tilde-importer"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bourn404/anno.git"
+  },
+  "author": "Carson Fairbourn",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bourn404/anno/issues"
+  },
+  "homepage": "https://github.com/bourn404/anno#readme",
+  "dependencies": {
+    "bulma": "^0.7.2"
+  },
+  "devDependencies": {
+    "node-sass": "^4.11.0",
+    "node-sass-tilde-importer": "^1.0.2"
+  }
+}
