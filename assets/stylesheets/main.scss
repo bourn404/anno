@@ -1,1 +1,54 @@
+$primary-darker: #116285;
+$primary-dark: #0B7C9C;
+$primary: #01B6D1;
+$primary-light: #66D2E3;
+$primary-lighter: #CAF0F5;
+
+.bottom0 {
+    bottom: 0 !important;
+}
+
+.columns {
+    margin: 0 !important;
+  }
+
 @import '~bulma/bulma.sass';
+
+.content {
+    padding: 5.25rem 2rem;
+}
+
+#annotatable {
+    z-index: 2;
+}
+
+#annotations {
+    color: red;
+    user-select: none;
+    position: absolute;
+    top: 0;
+}
+
+.underline {
+    text-decoration: underline;
+    text-underline-position: under;
+}
+
+#bottom-menu {
+    display: flex;
+    z-index: 5;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: $primary;
+    color: $white;
+    height: 0;
+    transition: height 350ms ease-in-out;
+    .bottom-btn.active {
+        background-color: $primary-darker;
+    }
+    .columns {
+        width: 100%;
+    }
+}

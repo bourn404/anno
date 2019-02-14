@@ -1,0 +1,22 @@
+{
+	"annotations":[
+		{
+		"id":1001,
+		"uri":0,
+		"offsetStart":250,
+		"offsetEnd":270,
+		"type":1,
+		"rgba":[255,0,0,1],
+		"tags":[1,2,3,4]
+		},
+		{
+		"id":1002,
+		"uri":2,
+		"offsetStart":5,
+		"offsetEnd":30,
+		"type":1,
+		"rgba":[0,0,255,1],
+		"tags":[1,2,3,4]
+		}
+	]
+}
