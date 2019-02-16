@@ -40,7 +40,6 @@
 
 
         let selection = window.getSelection();
-        //console.dir(selection);
         
         setTimeout(function(){
             if(selection.baseOffset != selection.extentOffset) {
@@ -81,7 +80,6 @@
     //add annotations into the page html
         function addAnnotationTags(content,annotations){
             for(let i=annotations.length-1; i>=0; i--){
-                console.log(i);
                 let paragraph = content[annotations[i].uri];
                 let color = 'rgba('+annotations[i].rgba[0]+','+annotations[i].rgba[1]+','+annotations[i].rgba[2]+','+annotations[i].rgba[3]+')';
                 let openTag = '<span class="underline" data-ucolor="'+color+'">';
@@ -91,9 +89,51 @@
             }
         }
 
+    //add new annotation
+        function addAnnotation(annotations,uri,offsetStart,offsetEnd,id,type,rgba,tags){
+            let annotation = 
+            {
+                "id":id,
+                "uri":uri,
+                "offsetStart":offsetStart,
+                "offsetEnd":offsetEnd,
+                "type":type,
+                "rgba":rgba,
+                "tags":tags
+            };
+            annotations.push(annotation);
+        }
+
     //split multiparagraph annotations
         function splitMultiParagraph(content,annotations){
-            
+            for(annotation of annotations){
+                
+
+                let paragraph = content[annotation.uri];
+                if(annotation.offsetEnd>paragraph.innerHTML.length){  //check if the annotation extends past the paragraph where it starts
+                    //TODO: find out how many paragraphs are spanned
+                    //annotation.offsetEnd = 5555555;
+                    //console.dir(annotation);
+                        let pCount = 0;
+                        let i = annotation.offsetEnd;
+                        while(i>0){
+                            i = i-content[annotation.uri+pCount].innerHTML.length;
+                            pCount++;
+                        }
+                        let leftover = i+content[annotation.uri+pCount-1].innerHTML.length;
+                        for(x = pCount-1; x>=0; x--){
+                            if(x==0) { //last paragraph with leftover
+                                addAnnotation(annotations,annotation.uri+pCount-1,0,leftover,annotation.id,annotation.type,annotation.rgba);
+                            } else if(x==pCount-1){ //first paragraph, starts part way through
+                                annotation.offsetEnd = content[annotation.uri].innerHTML.length;
+                            } else { //middle paragraph, full coverage
+                                addAnnotation(annotations,annotation.uri+x,0,content[annotation.uri+x].innerHTML.length,annotation.id,annotation.type,annotation.rgba);
+                            }
+                        }
+                        //TODO: For as many paragraphs as we span, create a new annotation.  Modify original annotation so that it ends at paragraph end.  if(lastparagraph){offsetEnd=leftover}else{offsetStart=0, offsetEnd=paragraph.length}
+                    //TODO: create annotation entries for each paragraph that have matching ids
+                }
+            }
         }
     
 
@@ -103,7 +143,10 @@
             annotations = JSON.parse(annots.srcElement.response).annotations;
             let content = document.getElementById('annotatable').children;
 
-
+            console.dir(annotations);
+            splitMultiParagraph(content,annotations);
+            //console.dir(annotations);
+            //TODO: Teach the annotation tag adder to understand how to work with annotations that don't have color information etc because they match id
             addAnnotationTags(content,annotations);
             styleAnnotations();
         }
