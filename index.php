@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Anno</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
-    <link rel="stylesheet" href="/assets/stylesheets/compiled/main.css">
+    <link rel="stylesheet" href="assets/stylesheets/compiled/main.css">
 </head>
 <body>
 
@@ -46,7 +46,7 @@
     </nav>
     <div id="content-wrapper">
         <div id="annotatable" class="content">
-            <?php include($_SERVER['DOCUMENT_ROOT'].'/content.php'); ?>
+            <?php include('content.php'); ?>
         </div>
         <!-- <div id="annotations" class="content">
             <span id="testSpan2">consectetuer adipiscing elit.</span>
@@ -69,7 +69,7 @@
         </div>
     </div>
 
-    <script src="/assets/js/core.js"></script>
+    <script src="assets/js/core.js"></script>
 
 </body>
 </html>
