@@ -1,21 +1,39 @@
 {
 	"annotations":[
 		{
-		"id":1001,
-		"uri":4,
+		"id":1002,
+		"uri":0,
+		"offsetStart":0,
+		"offsetEnd":400,
+		"type":1,
+		"rgba":[0,0,255,1],
+		"tags":[1,2,3,4]
+		},
+		{
+		"id":1003,
+		"uri":0,
 		"offsetStart":5,
-		"offsetEnd":870,
+		"offsetEnd":15,
 		"type":1,
 		"rgba":[255,0,0,1],
 		"tags":[1,2,3,4]
 		},
 		{
-		"id":1002,
-		"uri":2,
-		"offsetStart":5,
-		"offsetEnd":30,
+		"id":1004,
+		"uri":0,
+		"offsetStart":7,
+		"offsetEnd":19,
 		"type":1,
-		"rgba":[0,0,255,1],
+		"rgba":[0,255,0,1],
+		"tags":[1,2,3,4]
+		},
+		{
+		"id":1005,
+		"uri":0,
+		"offsetStart":16,
+		"offsetEnd":25,
+		"type":1,
+		"rgba":[255,255,0,1],
 		"tags":[1,2,3,4]
 		}
 	]

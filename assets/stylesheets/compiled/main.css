@@ -6764,9 +6764,9 @@ label.panel-block {
   position: absolute;
   top: 0; }
 
-.underline {
-  text-decoration: underline;
-  text-underline-position: under; }
+span {
+  line-height: 1.5em;
+  background-position: 0 100%; }
 
 #bottom-menu {
   display: flex;

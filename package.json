@@ -18,10 +18,9 @@
     "url": "https://github.com/bourn404/anno/issues"
   },
   "homepage": "https://github.com/bourn404/anno#readme",
-  "dependencies": {
-    "bulma": "^0.7.2"
-  },
+  "dependencies": {},
   "devDependencies": {
+    "bulma": "^0.7.2",
     "node-sass": "^4.11.0",
     "node-sass-tilde-importer": "^1.0.2"
   }
