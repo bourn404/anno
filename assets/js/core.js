@@ -252,4 +252,4 @@
         }
 
     //run the initialization
-        loadJSON('/data.json');
+        loadJSON('data.json');
