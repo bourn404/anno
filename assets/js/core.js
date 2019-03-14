@@ -31,10 +31,10 @@
     }
 
 //detect selection
-    document.addEventListener("touchend", function(){
-        if (event.target.closest('.menu') != null) {
-            event.preventDefault()
-        }
+    document.addEventListener("selectionchange", function(){
+        // if (event.target.closest('.menu') != null) {
+        //     event.preventDefault()
+        // }
 
 
         let selection = window.getSelection();
@@ -72,17 +72,19 @@
             let annotationElements = document.querySelectorAll('.annot');
             for(element of annotationElements) {
                 let parent = getParent(annotations,element.dataset.aid);
-                if(parent.type == 1) {
-                    element.style.background = "linear-gradient(0deg, "+rgbaToString(parent.rgba)+" 0.1em, white 0.1em, transparent 0.1em)"
-                    element.style.lineHeight = 1.5+(0.2*parent.layer) + "em";
-                    element.style.paddingBottom = 0.2*(parent.layer-1) + "em";
-                }                
+                if(parent.type === 1) {
+                    element.style.background = "linear-gradient(0deg, "+rgbaToString(parent.rgba)+" 0.15em, white 0.15em, transparent 0.15em)"
+                    element.style.lineHeight = 1.5+(0.3*parent.layer) + "em";
+                    element.style.paddingBottom = 0.3*(parent.layer-1) + "em";
+                } else if (parent.type === 2){
+
+                }               
             }
         }
     
     //get parent annotation attributes for those that are split
         function getParent(annotations,id){
-            return annotations.filter(parent => parent.id == id & parent.type)[0];
+            return annotations.filter(parent => parent.id == id & typeof(parent.type) != 'undefined')[0];
         }
 
     //convert rgba array to string
@@ -125,7 +127,7 @@
                     let layerIndex = 1;
                     for(annot of pairedAnnots){
                         let childParent = getParent(annotations,annot.id);
-                        while(typeof(childParent.layer)==='undefined'){ 
+                        while(typeof(childParent.layer)==='undefined' && childParent.type === 1){  //loop through all annotations that don't have a layer and are meant to be underlined
                             if(usedLayers.indexOf(layerIndex)===-1){ //skip layers that have already been used
                                 childParent.layer = layerIndex;
                                 usedLayers.push(layerIndex);
@@ -137,10 +139,10 @@
                     parent.layer = 1;
                 }
             }
-
-            for(annotation of annotations){
+            let tagsToMake = annotations.slice();;
+            for(annotation of tagsToMake){
                 let paragraph = content[annotation.uri];
-                let pairedAnnots = annotations.filter(annot => annot.id != annotation.id & annot.uri == annotation.uri & annot.offsetStart == annotation.offsetStart & annot.offsetEnd == annotation.offsetEnd);
+                let pairedAnnots = tagsToMake.filter(annot => annot.id != annotation.id & annot.uri == annotation.uri & annot.offsetStart == annotation.offsetStart & annot.offsetEnd == annotation.offsetEnd);
                 let openTag = generateOpenTag(annotation.id);
                 let closeTag = '</span>';
                 
@@ -148,7 +150,7 @@
                     for(annot of pairedAnnots){
                         openTag += generateOpenTag(annot.id);
                         closeTag += '</span>';
-                        annotations.splice(annotations.findIndex(origin => origin.id == annot.id & origin.offsetStart == annot.offsetStart & origin.offsetEnd == annot.offsetEnd),1);
+                        tagsToMake.splice(tagsToMake.findIndex(origin => origin.id == annot.id & origin.offsetStart == annot.offsetStart & origin.offsetEnd == annot.offsetEnd),1);
                     }
                 }
                 paragraph.innerHTML = (stringInsert(openTag,paragraph.innerHTML,annotation.offsetStart)); //add the openTag to innerHTML
@@ -210,6 +212,9 @@
                             breakpoints.push(annotation.offsetEnd);
                         }
                         breakpoints.sort((a, b) => a - b);
+                        breakpoints = breakpoints.filter(function(item, index){
+                            return breakpoints.indexOf(item) >= index;
+                        });
                     
                     //compare each annotation to the breakpoints to determine if it needs to be split
                         for(annotation of pAnnotations){
