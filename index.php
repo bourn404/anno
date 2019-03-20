@@ -69,7 +69,8 @@
         </div>
     </div>
 
-    <script src="assets/js/core.js"></script>
+    <script src="assets/js/core.js" type="module"></script>
+    <!-- <script src="assets/js/annotController.js" type="module"></script> -->
 
 </body>
 </html>

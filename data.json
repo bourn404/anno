@@ -1,12 +1,21 @@
 {
 	"annotations":[
 		{
+		"id":1001,
+		"uri":4,
+		"offsetStart":5,
+		"offsetEnd":870,
+		"type":1,
+		"rgba":[0,255,0,1],
+		"tags":[1,2,3,4]
+		},
+		{
 		"id":1002,
 		"uri":0,
 		"offsetStart":0,
 		"offsetEnd":400,
 		"type":1,
-		"rgba":[0,0,255,1],
+		"rgba":[255,0,0,1],
 		"tags":[1,2,3,4]
 		},
 		{
@@ -15,25 +24,70 @@
 		"offsetStart":5,
 		"offsetEnd":15,
 		"type":1,
-		"rgba":[255,0,0,1],
+		"rgba":[0,0,255,1],
 		"tags":[1,2,3,4]
 		},
 		{
 		"id":1004,
 		"uri":0,
-		"offsetStart":7,
-		"offsetEnd":19,
+		"offsetStart":8,
+		"offsetEnd":12,
 		"type":1,
-		"rgba":[0,255,0,1],
+		"rgba":[255,255,0,1],
 		"tags":[1,2,3,4]
 		},
 		{
 		"id":1005,
 		"uri":0,
-		"offsetStart":16,
-		"offsetEnd":25,
+		"offsetStart":18,
+		"offsetEnd":460,
+		"type":1,
+		"rgba":[0,255,255,1],
+		"tags":[1,2,3,4]
+		},
+		{
+		"id":1006,
+		"uri":1,
+		"offsetStart":5,
+		"offsetEnd":240,
+		"type":1,
+		"rgba":[0,0,25,1],
+		"tags":[1,2,3,4]
+		},
+		{
+		"id":1007,
+		"uri":0,
+		"offsetStart":8,
+		"offsetEnd":12,
 		"type":1,
 		"rgba":[255,255,0,1],
+		"tags":[1,2,3,4]
+		},
+		{
+		"id":1008,
+		"uri":0,
+		"offsetStart":8,
+		"offsetEnd":12,
+		"type":1,
+		"rgba":[255,255,0,1],
+		"tags":[1,2,3,4]
+		},
+		{
+		"id":1009,
+		"uri":0,
+		"offsetStart":8,
+		"offsetEnd":12,
+		"type":2,
+		"rgba":[100,40,130,1],
+		"tags":[1,2,3,4]
+		},
+		{
+		"id":1010,
+		"uri":7,
+		"offsetStart":5,
+		"offsetEnd":170,
+		"type":1,
+		"rgba":[0,0,0,1],
 		"tags":[1,2,3,4]
 		}
 	]
