@@ -54,17 +54,25 @@
     </div>
     <div id="bottom-menu" class="menu">
         <div class="columns is-mobile has-text-centered">
-            <div class="column bottom-btn activatable">
+            <div data-action="annotate" class="column bottom-btn activatable">
                 <span class="icon"><i class="fas fa-highlighter"></i></span>
+                <p>Mark</p>
             </div>
-            <div class="column bottom-btn activatable">
+            <div data-action="note" class="column bottom-btn activatable">
                 <span class="icon"><i class="fas fa-sticky-note"></i></span>
+                <p>Note</p>
             </div>
-            <div class="column bottom-btn activatable">
+            <div data-action="tag" class="column bottom-btn activatable">
                 <span class="icon"><i class="fas fa-tags"></i></span>
+                <p>Tag</p>
             </div>
-            <div class="column bottom-btn activatable">
+            <div data-action="copy" class="column bottom-btn activatable">
+                <span class="icon"><i class="fas fa-copy"></i></span>
+                <p>Copy</p>
+            </div>
+            <div data-action="delete" class="column bottom-btn activatable">
                 <span class="icon"><i class="fas fa-times"></i></span>
+                <p>Del</p>
             </div>
         </div>
     </div>

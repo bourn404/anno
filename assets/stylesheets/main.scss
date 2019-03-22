@@ -46,6 +46,13 @@ span {
     color: $white;
     height: 0;
     transition: height 350ms ease-in-out;
+    .bottom-btn {
+        text-align: center;
+        text-transform: uppercase;
+        p {
+            font-size: 0.7em;
+        }
+    }
     .bottom-btn.active {
         background-color: $primary-darker;
     }
