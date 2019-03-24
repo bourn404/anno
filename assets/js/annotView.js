@@ -27,6 +27,20 @@
         return 'rgba('+array[0]+','+array[1]+','+array[2]+','+array[3]+')'
     }
 
+//default annotation colors
+    let defaultColors = [
+        [238,74,96],
+        [244,146,40],
+        [235,204,55],
+        [160,201,37],
+        [15,205,213],
+        [37,150,255],
+        [157,83,254],
+        [248,91,234],
+        [205,125,90],
+        [174,184,193]
+    ]
+
 //return parent annotation for additional attributes
     function getParent(annotations,id){
         return annotations.filter(parent => parent.id == id & typeof(parent.type) != 'undefined')[0];
@@ -91,21 +105,185 @@
                 }  
         }
     }
-    const bottomMenu = document.getElementById('bottom-menu');
+
+//make the selection visible
+    function makeSelectionVisible(menuHeight){
+        let selectionY = window.getSelection().getRangeAt(0).getClientRects()[0].y
+        let menuY = window.innerHeight - parseInt(menuHeight,10) - 30; //30 gives it a buffer for partially covered selections
+        let idealScroll =  menuY/2;
+        console.log('selection: ' + selectionY + ' | menu: ' + menuY);
+        console.log('ideal: '+ idealScroll);
+        if(menuY < selectionY) {
+            //selection is not visible
+            // window.scrollBy(0, selectionY-idealScroll);
+            window.scrollBy({
+                top: selectionY-idealScroll, 
+                left: 0, 
+                behavior: 'smooth'
+              });
+        }
+    }
+
+//generate color options
+    function colorOptionsHTML(){
+        let html = '';
+        defaultColors.forEach(function(color){
+            html += '<div class="column is-one-fifth"><div data-color="'+color.toString()+'" class="color-option"></div></div>';
+        })
+        return html;
+    }
+
+//show menu for action
+    function renderActionMenu(action){
+        const menu = document.getElementById('action-menu');
+        const menuContent = menu.querySelector('.content');
+        switch(action) {
+            case "mark":
+                menuContent.innerHTML = `
+                    <div id="mark-type" class="column is-12 is-paddingless columns is-mobile">
+                        <p class="column is-paddingless"><span class="type-option"><span class="highlight">Highlight</span></span></p>
+                        <p class="column is-paddingless"><span class="type-option"><span class="underline">Underline</span></span></p>
+                    </div>
+                    <div id="mark-color" class="column is-12 is-paddingless columns is-mobile is-multiline">
+                        ${colorOptionsHTML()}
+                    </div>
+                `;
+                let colorOptions = menu.querySelectorAll('.color-option')
+                colorOptions.forEach(function(option){
+                    
+                    let color = 'rgb('+option.dataset.color+')'
+                    option.style.backgroundColor = color;
+                });
+                colorOptions.forEach(function(option) { 
+                      
+                    }
+                  );
+                break;
+            case "note":
+                menuContent.innerHTML = '<p class="column">Note Menu<br/><br/><br/></p>';
+                break;
+            case "tag":
+                menuContent.innerHTML = '<p class="column">Tag Menu<br/><br/><br/><br/><br/><br/></p>';
+                break;
+            default:
+                // code block
+            }
+    }
+
 export default class AnnotsView {
     constructor() {
         
     }
+
+
     //toggle bottom menu
-        toggleBottomMenu = function(state){
+        toggleBottomMenu = function(state,menuID){
+            let menu = document.getElementById(menuID);
             if(state === 1) {
-                var height = getHeight(bottomMenu,'block');
-                bottomMenu.style.height = 'auto';
-                bottomMenu.style.height = height;
+                var height = getHeight(menu,'block');
+                menu.style.height = 'auto';
+                menu.style.height = height;
+                makeSelectionVisible(height);
             } else {
-                bottomMenu.style.height = '0px';
+                menu.style.height = '0px';
+                let bottomBtns = document.querySelectorAll(".tab")
+                bottomBtns.forEach(function(btn){
+                    btn.classList.remove('active');
+                })
+            }            
+        }
+
+        toggleActionMenu = function(state,action){
+            let menu = document.getElementById('action-menu');
+            let bottomMenu = document.getElementById('bottom-menu');
+            let currentAction = '';
+            let height;
+            let currentState = 1;
+            let menuContent = menu.querySelector('.content');
+            let transitionSpeed = 350;
+            if(menu.dataset.action != null) {
+                currentAction = menu.dataset.action;
+            }
+            if(menu.style.height == '0px' || menu.style.height == '') {
+                currentState = 0;
+            }
+
+            let showMenu = function(height, transition){
+                if(transition){
+                    menu.style.transition = 'height '+transitionSpeed+'ms ease-in-out';
+                } else {
+                    menu.style.transition = 'none';
+                }
+                menu.style.height = '0px';
+                menu.style.height = height;
+                makeSelectionVisible(height);
+            }
+            let hideMenu = function(transition){
+                //prevent content from collapsing on menu hide transition
+                    menuContent.style.height = menuContent.scrollHeight + 'px';
+                if(transition){
+                    menu.style.transition = 'height '+transitionSpeed+'ms ease-in-out';
+                } else {
+                    menu.style.transition = 'none';
+                }
+                menu.style.height = '0px';
+                menu.style.paddingBottom = '0px';
+            }
+            let calcHeight = function(){
+                menuContent.style.height = 'auto';
+                menu.style.paddingBottom = bottomMenu.style.height;
+                return parseInt(getHeight(menu,'block'),10) + 'px'; //parseInt(menu.style.paddingBottom,10) + //I might be able to get rid of the parse int if this second part isn't necessary.
+            }        
+
+            if(state === 1 && currentState === 0) {
+                renderActionMenu(action);
+                showMenu(calcHeight(),true);
+            } else if(state === 1 && currentState === 1 && action != currentAction) {
+                hideMenu(true);
+                setTimeout(function(){
+                    renderActionMenu(action);
+                    showMenu(calcHeight(),true);
+                },340);
+                
+                //
+            } else if(state === 0 && currentState === 1) {
+                hideMenu(true);
+            }
+            menu.dataset.action = action;
+        }
+
+    //route button clicks
+        btnClick = function(button,siblings) {
+            let action = button.dataset.action;
+            let toggleActionMenu = this.toggleActionMenu
+            if(button.classList.contains('tab')){
+                siblings.forEach(function(btn){
+                    btn.classList.remove('active');
+                })
+            }
+            button.classList.add('active');
+
+            switch(action) {
+                case "mark":
+                    toggleActionMenu(1,action);
+                    break;
+                case "note":
+                    toggleActionMenu(1,action);
+                    break;
+                case "tag":
+                    toggleActionMenu(1,action);
+                    break;
+                case "copy":
+                    toggleActionMenu(0,action);
+                    break;
+                case "del":
+                    toggleActionMenu(0,action);
+                    break;
+                default:
+                  // code block
             }
         }
+
     //add css style attributes to all annotation span elements
         styleAnnotations(annotations){
             let annotationElements = document.querySelectorAll('.annot');

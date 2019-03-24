@@ -116,15 +116,15 @@ export default class AnnotsController {
         //detect selection
             document.addEventListener("selectionchange", function(){
                 let selection = window.getSelection();
-
                 //TODO: limit some of this on selection type
-                //console.dir(controller.getSelectionData(selection));
+                // console.log(controller.getSelectionData(selection));
 
                 setTimeout(function(){
                     if(selection.anchorOffset != selection.focusOffset || selection.anchorNode != selection.focusNode) {
-                        annotsView.toggleBottomMenu(1);
+                        annotsView.toggleBottomMenu(1,'bottom-menu');
                     } else {
-                        annotsView.toggleBottomMenu(0);
+                        annotsView.toggleBottomMenu(0,'bottom-menu');
+                        annotsView.toggleActionMenu(0,true);
                     }
                 }, 0);
 
@@ -133,21 +133,24 @@ export default class AnnotsController {
         //manual events for menu touch
             document.addEventListener("touchstart", function(event){
                 if (event.target.closest('.menu') != null) {
-                    let button = event.target.closest('.activatable');
-                    button.classList.add('active');
-                    setTimeout(function(){
-                        button.classList.remove('active');
-                    }, 150);
-                    let action = button.dataset.action;
-                    console.dir(action);
+                    let button;
+                    //check whether the click is occuring within the menu content or on one of the main tabs
+                        if(event.target.closest('.content') != null){
+                            //within content
+                        } else if(event.target.closest('.tab') != null) {
+                            //main tab
+                            let button = event.target.closest('.tab');
+                            let bottomBtns = button.parentNode.querySelectorAll(".tab")
+                            annotsView.btnClick(button,bottomBtns);
+                        }
                 }
             });
     }
     async init() {
-      
-      this.parentElement = document.querySelector(this.parent);
-      let rawData = await this.annots.loadJSON('data.json');
-      this.loadAnnotations(rawData);
+        // this.annotsView.toggleBottomMenu(1,'bottom-menu');
+        this.parentElement = document.querySelector(this.parent);
+        let rawData = await this.annots.loadJSON('data.json');
+        this.loadAnnotations(rawData);
     }
   
     async loadAnnotations(annots) {

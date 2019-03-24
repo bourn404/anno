@@ -6752,11 +6752,15 @@ label.panel-block {
   background-color: #fafafa;
   padding: 3rem 1.5rem 6rem; }
 
+body {
+  user-select: none; }
+
 .content {
   padding: 5.25rem 2rem; }
 
 #annotatable {
-  z-index: 2; }
+  z-index: 2;
+  user-select: text; }
 
 #annotations {
   color: red;
@@ -6788,5 +6792,47 @@ span {
     background-color: #116285; }
   #bottom-menu .columns {
     width: 100%; }
+
+#action-menu {
+  display: flex;
+  z-index: 3;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #116285;
+  color: white;
+  height: 0;
+  overflow: hidden; }
+  #action-menu .content {
+    padding: 0.5em; }
+  #action-menu .columns {
+    width: 100%; }
+  #action-menu #mark-type p {
+    text-transform: uppercase;
+    font-size: 0.75em; }
+    #action-menu #mark-type p .type-option {
+      display: inline-block;
+      background-color: white;
+      color: #000;
+      padding: 5px 8px;
+      border-radius: 3px; }
+      #action-menu #mark-type p .type-option .highlight {
+        background-color: rgba(255, 0, 0, 0.5);
+        padding: 0 4px; }
+      #action-menu #mark-type p .type-option .underline {
+        border-bottom: 1px solid red; }
+  #action-menu #mark-color .column {
+    padding: 0.25em; }
+  #action-menu #mark-color .color-option {
+    width: 100%;
+    background-color: red;
+    border-radius: 8px;
+    border: 2px solid white; }
+  #action-menu #mark-color .color-option:before {
+    content: "";
+    display: block;
+    padding-top: 100%;
+    /* initial ratio of 1:1*/ }
 
 /*# sourceMappingURL=main.css.map */

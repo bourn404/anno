@@ -54,27 +54,30 @@
     </div>
     <div id="bottom-menu" class="menu">
         <div class="columns is-mobile has-text-centered">
-            <div data-action="annotate" class="column bottom-btn activatable">
+            <div data-action="mark" class="column bottom-btn tab">
                 <span class="icon"><i class="fas fa-highlighter"></i></span>
                 <p>Mark</p>
             </div>
-            <div data-action="note" class="column bottom-btn activatable">
+            <div data-action="note" class="column bottom-btn tab">
                 <span class="icon"><i class="fas fa-sticky-note"></i></span>
                 <p>Note</p>
             </div>
-            <div data-action="tag" class="column bottom-btn activatable">
+            <div data-action="tag" class="column bottom-btn tab">
                 <span class="icon"><i class="fas fa-tags"></i></span>
                 <p>Tag</p>
             </div>
-            <div data-action="copy" class="column bottom-btn activatable">
+            <div data-action="copy" class="column bottom-btn tab">
                 <span class="icon"><i class="fas fa-copy"></i></span>
                 <p>Copy</p>
             </div>
-            <div data-action="delete" class="column bottom-btn activatable">
+            <div data-action="delete" class="column bottom-btn tab">
                 <span class="icon"><i class="fas fa-times"></i></span>
                 <p>Del</p>
             </div>
         </div>
+    </div>
+    <div id="action-menu" class="menu columns is-mobile has-text-centered is-multiline">
+        <div class="content column is-12 columns is-multiline is-mobile"></div>
     </div>
 
     <script src="assets/js/core.js" type="module"></script>
