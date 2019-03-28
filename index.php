@@ -46,7 +46,7 @@
     </nav>
     <div id="content-wrapper">
         <div id="annotatable" class="content">
-            <?php include('content.php'); ?>
+            
         </div>
         <!-- <div id="annotations" class="content">
             <span id="testSpan2">consectetuer adipiscing elit.</span>
@@ -54,23 +54,23 @@
     </div>
     <div id="bottom-menu" class="menu">
         <div class="columns is-mobile has-text-centered">
-            <div data-action="mark" class="column bottom-btn tab">
+            <div data-action="mark" class="column bottom-btn tab activatable">
                 <span class="icon"><i class="fas fa-highlighter"></i></span>
                 <p>Mark</p>
             </div>
-            <div data-action="note" class="column bottom-btn tab">
+            <div data-action="note" class="column bottom-btn tab activatable">
                 <span class="icon"><i class="fas fa-sticky-note"></i></span>
                 <p>Note</p>
             </div>
-            <div data-action="tag" class="column bottom-btn tab">
+            <div data-action="tag" class="column bottom-btn tab activatable">
                 <span class="icon"><i class="fas fa-tags"></i></span>
                 <p>Tag</p>
             </div>
-            <div data-action="copy" class="column bottom-btn tab">
+            <div data-action="copy" class="column bottom-btn tab activatable">
                 <span class="icon"><i class="fas fa-copy"></i></span>
                 <p>Copy</p>
             </div>
-            <div data-action="delete" class="column bottom-btn tab">
+            <div data-action="delete" class="column bottom-btn tab activatable">
                 <span class="icon"><i class="fas fa-times"></i></span>
                 <p>Del</p>
             </div>

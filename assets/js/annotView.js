@@ -65,6 +65,9 @@
 
 //assign layers for stacked underline annotations
     function assignLayers(annotations) {
+        for (let annotation of annotations) {
+            annotation.layer = null;
+        }
         for(let annotation of annotations){
             let parent = getParent(annotations,annotation.id);
             //only stack type 1 (underline) annotations.  If an annotation type gets changed, we'll have to rerender.
@@ -76,12 +79,12 @@
                         if(pairedAnnots.length > 0){ 
                             let usedLayers = [];
                             //check for any layers which are already assigned tp parent annotations
-                                if(typeof(parent.layer) != 'undefined'){
+                                if(parent.layer != null){
                                     usedLayers.push(parent.layer);
                                 }
                                 for(let annot of pairedAnnots){ 
                                     let childParent = getParent(annotations,annot.id);
-                                        if(typeof(childParent.layer)!='undefined'){
+                                        if(childParent.layer!=null){
                                             usedLayers.push(childParent.layer);
                                         }
                                 }
@@ -90,7 +93,7 @@
                             for(let annot of pairedAnnots){
                                 let childParent = getParent(annotations,annot.id);
                                 //increment through the layerIndex until we find one that hasn't been used yet
-                                    while(typeof(childParent.layer)==='undefined' && childParent.type === 1){
+                                    while(childParent.layer==null && childParent.type === 1){
                                         if(usedLayers.indexOf(layerIndex)===-1){ 
                                             childParent.layer = layerIndex;
                                             usedLayers.push(layerIndex);
@@ -98,7 +101,7 @@
                                         layerIndex++;
                                     }
                             }
-                        } else if (typeof(parent.layer) === 'undefined') {
+                        } else if (parent.layer == null) {
                             //assign lonely annotations to layer 1
                                 parent.layer = 1;
                         }
@@ -110,25 +113,32 @@
     function makeSelectionVisible(menuHeight){
         let selectionY = window.getSelection().getRangeAt(0).getClientRects()[0].y
         let menuY = window.innerHeight - parseInt(menuHeight,10) - 30; //30 gives it a buffer for partially covered selections
-        let idealScroll =  menuY/2;
-        console.log('selection: ' + selectionY + ' | menu: ' + menuY);
-        console.log('ideal: '+ idealScroll);
+        let idealScrollPos =  menuY/2;  //halfway between the top of the viewport and the top of the menu
         if(menuY < selectionY) {
             //selection is not visible
-            // window.scrollBy(0, selectionY-idealScroll);
             window.scrollBy({
-                top: selectionY-idealScroll, 
+                top: selectionY-idealScrollPos, 
                 left: 0, 
                 behavior: 'smooth'
               });
         }
     }
 
+//clear the selection
+    function clearSelection(){
+        let sel = window.getSelection();
+            if (sel.removeAllRanges) {
+                sel.removeAllRanges();
+            } else if (sel.empty) {
+                sel.empty();
+            }
+    }
+
 //generate color options
     function colorOptionsHTML(){
         let html = '';
         defaultColors.forEach(function(color){
-            html += '<div class="column is-one-fifth"><div data-color="'+color.toString()+'" class="color-option"></div></div>';
+            html += '<div data-action="mark-color" class="column is-one-fifth activatable"><div data-color="'+color.toString()+'" class="color-option"></div></div>';
         })
         return html;
     }
@@ -140,11 +150,11 @@
         switch(action) {
             case "mark":
                 menuContent.innerHTML = `
-                    <div id="mark-type" class="column is-12 is-paddingless columns is-mobile">
-                        <p class="column is-paddingless"><span class="type-option"><span class="highlight">Highlight</span></span></p>
-                        <p class="column is-paddingless"><span class="type-option"><span class="underline">Underline</span></span></p>
+                    <div id="mark-type" class="column is-12 is-paddingless columns is-mobile btn-wrapper">
+                        <p data-action="mark-type" class="column activatable"><span class="type-option"><span class="highlight">Highlight</span></span></p>
+                        <p data-action="mark-type" class="column activatable"><span class="type-option"><span class="underline">Underline</span></span></p>
                     </div>
-                    <div id="mark-color" class="column is-12 is-paddingless columns is-mobile is-multiline">
+                    <div id="mark-color" class="column is-12 is-paddingless columns is-mobile is-multiline btn-wrapper">
                         ${colorOptionsHTML()}
                     </div>
                 `;
@@ -254,14 +264,19 @@ export default class AnnotsView {
 
     //route button clicks
         btnClick = function(button,siblings) {
+            
+            siblings =[].slice.call(siblings);
             let action = button.dataset.action;
             let toggleActionMenu = this.toggleActionMenu
-            if(button.classList.contains('tab')){
+            if(button.classList.contains('activatable')){
                 siblings.forEach(function(btn){
                     btn.classList.remove('active');
                 })
             }
             button.classList.add('active');
+            console.dir(action);
+
+            let toggleBottomMenu = this.toggleBottomMenu
 
             switch(action) {
                 case "mark":
@@ -275,9 +290,14 @@ export default class AnnotsView {
                     break;
                 case "copy":
                     toggleActionMenu(0,action);
+                    document.execCommand("copy");
+                    toggleBottomMenu(0,'bottom-menu');
+                    clearSelection();
                     break;
-                case "del":
+                case "delete":
                     toggleActionMenu(0,action);
+                    toggleBottomMenu(0,'bottom-menu');
+                    clearSelection();
                     break;
                 default:
                   // code block
