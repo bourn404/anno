@@ -43,7 +43,7 @@
 
 //return parent annotation for additional attributes
     function getParent(annotations,id){
-        return annotations.filter(parent => parent.id == id & typeof(parent.type) != 'undefined')[0];
+        return annotations.filter(parent => parent.id == id & parent.type != null)[0];
     }
 
 //generate annotation opening tag
@@ -151,8 +151,8 @@
             case "mark":
                 menuContent.innerHTML = `
                     <div id="mark-type" class="column is-12 is-paddingless columns is-mobile btn-wrapper">
-                        <p data-action="mark-type" class="column activatable"><span class="type-option"><span class="highlight">Highlight</span></span></p>
-                        <p data-action="mark-type" class="column activatable"><span class="type-option"><span class="underline">Underline</span></span></p>
+                        <p data-action="mark-type" class="column activatable"><span class="type-option"><span data-type="2" class="highlight">Highlight</span></span></p>
+                        <p data-action="mark-type" class="column activatable"><span class="type-option"><span data-type="1" class="underline">Underline</span></span></p>
                     </div>
                     <div id="mark-color" class="column is-12 is-paddingless columns is-mobile is-multiline btn-wrapper">
                         ${colorOptionsHTML()}
@@ -313,10 +313,15 @@ export default class AnnotsView {
                 if(parent.type === 1) {
                     //styles for underline (type 1)
                         element.style.background = "linear-gradient(0deg, "+rgbaToString(parent.rgba)+" 0.15em, white 0.15em, transparent 0.15em)"
-                        element.style.lineHeight = 1.5+(0.3*parent.layer) + "em";
+                        element.style.lineHeight = 1+(0.45*parent.layer) + "em";
                         element.style.paddingBottom = 0.3*(parent.layer-1) + "em";
                 } else if (parent.type === 2){
                     //styles for highlight (type 2)
+                        //console.dir(parent.rgba);
+                        let color = parent.rgba.slice();
+                        color.pop();
+                        color.push(0.3); //opacity setting
+                        element.style.backgroundColor = rgbaToString(color);
                 }               
             }
         }
