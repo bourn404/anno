@@ -11,7 +11,13 @@ function findStringInString(search,toSearch){
         let calculatedOffset;
         //often the node will start or end in the base paragraph node
         if(node.parentNode.nodeName == "P"){
-            calculatedOffset = findStringInString(node.data,pHTML);
+            if(node.nodeName == "SPAN"){
+                calculatedOffset = findStringInString(node.innerHTML,pHTML);
+            } else if(node.childNodes.length != 0 && node.childNodes[0].nodeName == "#text"){
+                calculatedOffset = findStringInString(node.childNodes[0].data,pHTML);
+            } else {
+                calculatedOffset = findStringInString(node.data,pHTML);
+            }
         } else {
             calculatedOffset = findStringInString(node.parentNode.outerHTML,pHTML)
         }
@@ -20,7 +26,7 @@ function findStringInString(search,toSearch){
 
 
 
-    function selectElementContents(elements) { //TODO: Get it to select multiple ranges!!
+    function selectElementContents(elements) {
         if (window.getSelection && document.createRange) {
             let sel = window.getSelection();
             sel.removeAllRanges();
@@ -90,17 +96,16 @@ export default class AnnotsController {
             document.addEventListener("touchstart", function(event){
                 if (event.target.closest('.menu') != null) {
                     let button;
+                    let siblings;
                     //check whether the click is occuring within the menu content or on one of the main tabs
                         if(event.target.closest('.btn-wrapper') != null){
                             //within content
                             button = event.target.closest('.activatable');
-                            let siblings = button.parentNode.closest(".btn-wrapper").children;
-                            annotsView.btnClick(button,siblings);
+                            siblings = button.parentNode.closest(".btn-wrapper").children;
                         } else if(event.target.closest('.tab') != null) {
                             //main tab
                             button = event.target.closest('.tab');
-                            let bottomBtns = button.parentNode.querySelectorAll(".tab")
-                            annotsView.btnClick(button,bottomBtns);
+                            siblings = button.parentNode.querySelectorAll(".tab")
                         }
                         let action = button.dataset.action;
                         let annots = {annotations:annotations};
@@ -126,13 +131,21 @@ export default class AnnotsController {
                                 //add/edit annotation, reload
                                 break;
                             case "delete":
+                                if(selectedAnnotation != '') {
+                                    console.log('delete annotation');
+                                    controller.deleteAnnotation(annots,selectedAnnotation);
+                                }
                                 //edit annotation, reload
                                 break;
                             default:
                               // code block
                         }
-
-                        
+                        annotsView.btnClick(button,siblings);                         
+                } else if(event.target.closest('.edit-icon') != null) {
+                    let icon = event.target.closest('.edit-icon');
+                    let button = event.target.closest('.edit-icon');
+                    annotsView.btnClick(button);  
+                    selectAnnotation(icon.dataset.id);
                 }
             });
     }
@@ -154,6 +167,7 @@ export default class AnnotsController {
   
     loadAnnotations(annots) {
         document.getElementById('annotatable').innerHTML = this.annotatableContent;
+        document.querySelectorAll('.edit-icon').forEach(e => e.parentNode.removeChild(e));
         //I need to be able to edit annotations by ID such that when we reload all of the content and have to reset the selection, it can be based on the annotation ID that we created.
         annotations = annots.annotations;
         let content = this.annotatableContentElement.children;
@@ -161,6 +175,7 @@ export default class AnnotsController {
         this.splitOverlap(content,annotations);
         this.annotsView.renderAnnotations(content,annotations);
         this.annotsView.styleAnnotations(annotations);
+        this.annotsView.renderAnnotIcons(this.annotatableContentElement.parentNode);
     }
 
     reloadAnnotations() {
@@ -399,5 +414,16 @@ export default class AnnotsController {
             this.addAnnotation(annotations.annotations,uri,offsetStart,offsetEnd,selectionID,parseInt(type,10),rgba,tags);
             this.loadAnnotations(annotations); //reload annotations
             selectAnnotation(selectionID);
+        }
+
+        deleteAnnotation(annotations,id){
+            //delete from local annotations array
+                annotations.annotations = annotations.annotations.filter(annotation => annotation.id != id);
+            //delete from storage annotations array
+                let storedAnnots = this.annots.loadStorage("annots");
+                storedAnnots.annotations = storedAnnots.annotations.filter(annotation => annotation.id != id);
+                this.annots.saveStorage("annots",storedAnnots);
+            //reload rendered annotations
+                this.loadAnnotations(annotations);
         }
   }

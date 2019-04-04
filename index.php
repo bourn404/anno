@@ -44,13 +44,8 @@
         </div>
     </div>
     </nav>
-    <div id="content-wrapper">
-        <div id="annotatable" class="content">
-            
-        </div>
-        <!-- <div id="annotations" class="content">
-            <span id="testSpan2">consectetuer adipiscing elit.</span>
-        </div> -->
+    <div id="content-wrapper" class="columns is-mobile">
+        <div id="annotatable" class="content"></div>
     </div>
     <div id="bottom-menu" class="menu">
         <div class="columns is-mobile has-text-centered">

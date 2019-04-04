@@ -47,8 +47,12 @@
     }
 
 //generate annotation opening tag
-    function generateOpenTag(id) {
-        return '<span class="annot" data-aid="'+id+'">';
+    function generateOpenTag(id,isParent) {
+        return '<span class="annot" data-aid="'+id+'" data-parent="'+isParent+'">';
+    }
+
+    function generateIconHTML(id,top){
+        return '<span class="edit-icon" data-id="'+id+'" data-action="edit" style="top:'+top+'"><i class="far fa-edit"></i></span>'
     }
 
 //sort annotations for rendering from bottom to top of page
@@ -264,16 +268,18 @@ export default class AnnotsView {
 
     //route button clicks
         btnClick = function(button,siblings) {
-            
-            siblings =[].slice.call(siblings);
             let action = button.dataset.action;
             let toggleActionMenu = this.toggleActionMenu
-            if(button.classList.contains('activatable')){
-                siblings.forEach(function(btn){
-                    btn.classList.remove('active');
-                })
+            if(siblings != null){
+                siblings =[].slice.call(siblings);
+                if(button.classList.contains('activatable')){
+                    siblings.forEach(function(btn){
+                        btn.classList.remove('active');
+                    })
+                }
+                button.classList.add('active');
             }
-            button.classList.add('active');
+
             console.dir(action);
 
             let toggleBottomMenu = this.toggleBottomMenu
@@ -299,6 +305,10 @@ export default class AnnotsView {
                     toggleBottomMenu(0,'bottom-menu');
                     clearSelection();
                     break;
+                case "edit":
+                    toggleActionMenu(0,action);
+                    toggleBottomMenu(0,'bottom-menu');
+                    break;
                 default:
                   // code block
             }
@@ -322,7 +332,7 @@ export default class AnnotsView {
                         color.pop();
                         color.push(0.3); //opacity setting
                         element.style.backgroundColor = rgbaToString(color);
-                }               
+                }        
             }
         }
     //add annotations into the page html
@@ -336,18 +346,25 @@ export default class AnnotsView {
 
             //add annotations to a rendering queue so we can keep track of what has and hasn't been rendered
                 let annotsToRender = annotations.slice();;
-            
             //process the rendering queue
                 for(let annotation of annotsToRender){
                     let paragraph = content[annotation.uri];
                     let pairedAnnots = annotsToRender.filter(annot => annot.id != annotation.id & annot.uri == annotation.uri & annot.offsetStart == annotation.offsetStart & annot.offsetEnd == annotation.offsetEnd);
-                    let openTag = generateOpenTag(annotation.id);
                     let closeTag = '</span>';
-                    
+                    let isParent = false;
+                    if(annotation.type != null){
+                        isParent = true;
+                    }
+                    let openTag = generateOpenTag(annotation.id,isParent);
                     //create nested spans for overlapping annotations
                         if(pairedAnnots.length > 0){ 
                             for(let annot of pairedAnnots){
-                                openTag += generateOpenTag(annot.id);
+                                if(annot.type != null) {
+                                    isParent = true;
+                                } else {
+                                    isParent = false;
+                                }
+                                openTag += generateOpenTag(annot.id,isParent);
                                 closeTag += '</span>';
                                 //delete nested span from the rendering queue 
                                     annotsToRender.splice(annotsToRender.findIndex(origin => origin.id == annot.id & origin.offsetStart == annot.offsetStart & origin.offsetEnd == annot.offsetEnd),1);
@@ -359,8 +376,30 @@ export default class AnnotsView {
                     
                     //add the closeTag to innerHTML, accounting for the additional length caused by openTag
                         paragraph.innerHTML = (stringInsert(closeTag,paragraph.innerHTML,annotation.offsetEnd+openTag.length)); 
-
                 }
+        }
+    
+    //render individual annotation icons 
+        renderAnnotIcons(contentElement){
+            let parentAnnotElements = document.querySelectorAll("[data-parent='true']");
+            console.log(parentAnnotElements);
+            console.dir(parentAnnotElements);
+            let locations = [];
+            for(let element of parentAnnotElements){
+                let id = element.dataset.aid;
+                let top = element.offsetTop;
+                locations.push([id,top]);
+            }
+            console.dir(locations);
+            //TODO: combine locations with matching heights
+            for(let item of locations){
+                let id = item[0];
+                let top = item[1]+'px';
+                console.log(top);
+                let iconNode = document.createRange().createContextualFragment(generateIconHTML(id,top));
+                console.dir(iconNode);
+                contentElement.appendChild(iconNode);
+            }
         }
 }
 

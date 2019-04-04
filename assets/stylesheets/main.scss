@@ -16,14 +16,33 @@ $primary-lighter: #CAF0F5;
 
 body {
     user-select: none;
+    position: relative;
 }
 .content {
     padding: 5.25rem 2rem;
 }
 
+#content-wrapper {
+    position: relative;
+    .edit-icon {
+        color: $grey-lighter;
+        position:absolute;
+        right: 0.5em;
+        min-width: 44px;
+        min-height: 44px;
+        text-align: right;
+        z-index:3
+    }
+    .edit-icon:hover {
+        color: $grey;
+    }
+}
+
 #annotatable {
     z-index: 2;
     user-select: text;
+    padding-left: 1.5em;
+    padding-right: 2.5em;
 }
 
 #annotations {
@@ -67,7 +86,7 @@ span {
 
 #action-menu {
     display: flex;
-    z-index: 3;
+    z-index: 4;
     position: fixed;
     left: 0;
     bottom: 0;

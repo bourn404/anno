@@ -6753,14 +6753,30 @@ label.panel-block {
   padding: 3rem 1.5rem 6rem; }
 
 body {
-  user-select: none; }
+  user-select: none;
+  position: relative; }
 
 .content {
   padding: 5.25rem 2rem; }
 
+#content-wrapper {
+  position: relative; }
+  #content-wrapper .edit-icon {
+    color: #dbdbdb;
+    position: absolute;
+    right: 0.5em;
+    min-width: 44px;
+    min-height: 44px;
+    text-align: right;
+    z-index: 3; }
+  #content-wrapper .edit-icon:hover {
+    color: #7a7a7a; }
+
 #annotatable {
   z-index: 2;
-  user-select: text; }
+  user-select: text;
+  padding-left: 1.5em;
+  padding-right: 2.5em; }
 
 #annotations {
   color: red;
@@ -6795,7 +6811,7 @@ span {
 
 #action-menu {
   display: flex;
-  z-index: 3;
+  z-index: 4;
   position: fixed;
   left: 0;
   bottom: 0;
