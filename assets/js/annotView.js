@@ -382,22 +382,16 @@ export default class AnnotsView {
     //render individual annotation icons 
         renderAnnotIcons(contentElement){
             let parentAnnotElements = document.querySelectorAll("[data-parent='true']");
-            console.log(parentAnnotElements);
-            console.dir(parentAnnotElements);
             let locations = [];
             for(let element of parentAnnotElements){
                 let id = element.dataset.aid;
                 let top = element.offsetTop;
                 locations.push([id,top]);
             }
-            console.dir(locations);
-            //TODO: combine locations with matching heights
             for(let item of locations){
                 let id = item[0];
                 let top = item[1]+'px';
-                console.log(top);
                 let iconNode = document.createRange().createContextualFragment(generateIconHTML(id,top));
-                console.dir(iconNode);
                 contentElement.appendChild(iconNode);
             }
         }

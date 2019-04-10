@@ -142,10 +142,21 @@ export default class AnnotsController {
                         }
                         annotsView.btnClick(button,siblings);                         
                 } else if(event.target.closest('.edit-icon') != null) {
-                    let icon = event.target.closest('.edit-icon');
                     let button = event.target.closest('.edit-icon');
+                    let top = button.offsetTop;
+                    let optionsNearby = [];
+                    let allEditIcons = document.querySelectorAll('.edit-icon');
+                    for(let icon of allEditIcons){
+                        if(Math.abs(top - icon.offsetTop)<45){
+                            optionsNearby.push(icon);
+                        }
+                    }
+                    console.log('---');
+                    console.log('Could have tapped:')
+                    console.dir(optionsNearby);
+                    //TODO: display menu of nearby options
                     annotsView.btnClick(button);  
-                    selectAnnotation(icon.dataset.id);
+                    selectAnnotation(button.dataset.id);
                 }
             });
     }
